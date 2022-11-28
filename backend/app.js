@@ -2,17 +2,20 @@ const express = require('express');
 const app = express();
 const port = 8000;
 const cors = require('cors');
+const path = require('path');
 
 const server = app.listen(port, () => {
     console.log(`Node.js server is listening at port ${port}`);
 });
 
 //app.use(cors())
+const buildPath = path.normalize(path.join(__dirname, '../frontend/build'));
+app.use(express.static(buildPath));
 
 const dictionary = {};
 
 app.get('/', (req, res) => {
-    res.send('sundalik');
+    res.sendFile(path.join(buildPath, 'index.html'));
 });
 
 function isValidQueryValue(value) {
