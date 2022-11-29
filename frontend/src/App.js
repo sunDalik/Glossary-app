@@ -2,6 +2,7 @@ import './App.css';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import GlossaryMain from './GlossaryMain';
 import NotFound from './NotFound';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 function App() {
   return (
