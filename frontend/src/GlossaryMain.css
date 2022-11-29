@@ -1,0 +1,23 @@
+.GM_page {
+  padding: 6px;
+}
+
+.GM_header {
+  text-align: center;
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.GM_dictKey {
+  font-size: 20px;
+  text-decoration: underline;
+  text-transform: capitalize;
+}
+
+.GM_dictValue {
+  font-size: 14px;
+}
+
+.GM_dictContainer {
+  display: list-item;
+}
