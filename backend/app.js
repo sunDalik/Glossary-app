@@ -8,7 +8,7 @@ const server = app.listen(port, () => {
     console.log(`Node.js server is listening at port ${port}`);
 });
 
-//app.use(cors())
+app.use(cors())
 const buildPath = path.normalize(path.join(__dirname, '../frontend/build'));
 app.use(express.static(buildPath));
 
@@ -22,9 +22,8 @@ function isValidQueryValue(value) {
     return value !== undefined && value !== null && value !== "";
 }
 
-// TODO change to post
 // /add?key=persona&value=awake
-app.get('/add', (req, res) => {
+app.post('/add', (req, res) => {
     const key = req.query.key;
     const value = req.query.value;
     if (!isValidQueryValue(key) || !isValidQueryValue(value)) {

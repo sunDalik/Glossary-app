@@ -3,19 +3,34 @@ import './GlossaryMain.css'
 import { Button, Col, Row, Form, ListGroup } from 'react-bootstrap';
 
 function GlossaryMain() {
+  const SERVER_URL = 'http://localhost:8000'
   const [dictionary, setDictionary] = useState([{ key: 'lol', value: 'test' }, { key: 'persona', value: 'ravage them' },]);
   const [newKey, setNewKey] = useState('');
   const [newValue, setNewValue] = useState('');
 
-
   useEffect(() => {
-    //TODO fetch
+    fetch(`${SERVER_URL}/read`, {
+      method: 'GET',
+    }).then(response => response.json())
+      .then(json => {
+        console.log(json);
+        const serverDictionary = Object.entries(json).map(e => {
+          return { key: e[0], value: e[1] }
+        });
+        console.log(serverDictionary);
+        setDictionary(serverDictionary);
+      })
   }, []);
 
   const onSubmit = (e) => {
     e.preventDefault();
-    setDictionary([{ key: newKey, value: newValue }, ...dictionary]);
-    //TODO post
+    fetch(`${SERVER_URL}/add?key=${newKey}&value=${newValue}`, {
+      method: 'POST',
+    }).then(response => {
+      if (response.status == 200) {
+        setDictionary([{ key: newKey, value: newValue }, ...dictionary]);
+      }
+    });
   };
 
   return (
