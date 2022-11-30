@@ -1,13 +1,12 @@
 ## Run with docker
 Run  
 ```
-docker build . -t glossary-app
-docker run -d -p 8000:8000 glossary-app
+docker-compose up --build -d 
 ```
-You can then find out the id of your running container and stop it like this  
+  
+Stop running containers  
 ```
-docker ps
-docker stop containerid
+docker-compose stop
 ```
 
 ## Run without docker
