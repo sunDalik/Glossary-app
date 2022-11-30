@@ -1,6 +1,6 @@
-FROM node:alpine
+FROM node:16-alpine
 COPY . /app
 WORKDIR /app
-RUN npm install
+RUN npm install && cd frontend && npm install && npm run build && cd ..
 EXPOSE 8000
-CMD node backend/app.js
+CMD npm run backend
