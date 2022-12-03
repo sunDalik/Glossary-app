@@ -1,10 +1,13 @@
 import { useEffect, useState } from 'react';
 import './GlossaryMain.css'
-import { Button, Col, Row, Form, ListGroup } from 'react-bootstrap';
+import { Button, Col, Row, Form, ListGroup, InputGroup } from 'react-bootstrap';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons'
 
 function GlossaryMain() {
   const SERVER_URL = 'http://localhost:8000'
   const [dictionary, setDictionary] = useState([{ key: 'lol', value: 'test' }, { key: 'persona', value: 'ravage them' },]);
+  const [searchString, setNewSearchString] = useState('');
   const [newKey, setNewKey] = useState('');
   const [newValue, setNewValue] = useState('');
 
@@ -36,7 +39,7 @@ function GlossaryMain() {
   return (
     <div className='GM_page'>
       <div className='h3 text-center'>Glossary</div>
-      <form onSubmit={onSubmit} className='ms-4 w-75 mt-4'>
+      <form onSubmit={onSubmit} className='ms-4 w-75 mt-4 mb-5'>
         <Row className="align-items-end">
           <Col>
             <Form.Group>
@@ -56,8 +59,15 @@ function GlossaryMain() {
         </Row>
       </form>
 
-      <ListGroup className='w-50 mt-5'>
-        {dictionary.map((entry) => {
+      <InputGroup className="w-25 ms-4">
+        <InputGroup.Text>
+        <FontAwesomeIcon icon={faMagnifyingGlass} />
+        </InputGroup.Text>
+        <Form.Control placeholder="Search..." value={searchString} onChange={e => setNewSearchString(e.target.value)}></Form.Control>
+      </InputGroup>
+
+      <ListGroup className='w-50 mt-4'>
+        {dictionary.filter(entry => entry.key.toLowerCase().includes(searchString.toLowerCase())).map((entry) => {
           return (
             <ListGroup.Item key={entry.key} className='ms-3'>
               <div className='GM_dictKey'>{entry.key}</div>
