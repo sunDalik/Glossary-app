@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import './GlossaryMain.css'
 import { Button, Col, Row, Form, ListGroup, InputGroup } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons'
+import { faMagnifyingGlass, faTrash } from '@fortawesome/free-solid-svg-icons'
 
 function GlossaryMain() {
   const SERVER_URL = 'http://localhost:8000'
@@ -27,14 +27,28 @@ function GlossaryMain() {
 
   const onSubmit = (e) => {
     e.preventDefault();
-    fetch(`${SERVER_URL}/add?key=${newKey}&value=${newValue}`, {
+    const _newKey = newKey;
+    const _newValue = newValue;
+    fetch(`${SERVER_URL}/add?key=${_newKey}&value=${_newValue}`, {
       method: 'POST',
     }).then(response => {
-      if (response.status == 200) {
-        setDictionary([{ key: newKey, value: newValue }, ...dictionary]);
+      if (response.status === 200) {
+        const newDictionary = dictionary.slice().filter(e => e.key != _newKey);
+        newDictionary.unshift({ key: _newKey, value: _newValue });
+        setDictionary(newDictionary);
       }
     });
   };
+
+  const deleteKey = (key) => {
+    fetch(`${SERVER_URL}/delete?deletedKey=${key}`, {
+      method: 'POST',
+    }).then(response => {
+      if (response.status === 200) {
+        setDictionary(dictionary.filter(entry => entry.key != key));
+      }
+    });
+  }
 
   return (
     <div className='GM_page'>
@@ -61,7 +75,7 @@ function GlossaryMain() {
 
       <InputGroup className="w-25 ms-4">
         <InputGroup.Text>
-        <FontAwesomeIcon icon={faMagnifyingGlass} />
+          <FontAwesomeIcon icon={faMagnifyingGlass} />
         </InputGroup.Text>
         <Form.Control placeholder="Search..." value={searchString} onChange={e => setNewSearchString(e.target.value)}></Form.Control>
       </InputGroup>
@@ -69,9 +83,14 @@ function GlossaryMain() {
       <ListGroup className='w-50 mt-4'>
         {dictionary.filter(entry => entry.key.toLowerCase().includes(searchString.toLowerCase())).map((entry) => {
           return (
-            <ListGroup.Item key={entry.key} className='ms-3'>
-              <div className='GM_dictKey'>{entry.key}</div>
-              <div className='GM_dictValue'>{entry.value}</div>
+            <ListGroup.Item key={entry.key} className='ms-3 d-flex align-start justify-content-between'>
+              <div>
+                <div className='GM_dictKey'>{entry.key}</div>
+                <div className='GM_dictValue'>{entry.value}</div>
+              </div>
+              <Button onClick={() => deleteKey(entry.key)} variant="link">
+                <FontAwesomeIcon icon={faTrash} color="gray"/>
+              </Button>
             </ListGroup.Item>)
         })}
       </ListGroup>

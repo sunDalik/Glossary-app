@@ -53,9 +53,20 @@ app.post('/add', async (req, res) => {
 app.get('/read', async (req, res) => {
     const searchString = isValidQueryValue(req.query.search) ? req.query.search : '';
     const limit = isValidQueryValue(req.query.limit) ? req.query.limit : 1000;
-    const dictionary = await GlossariesModel.findOne();
+    const dictionary = await GlossariesModel.findOne().select('-_id -__v');
     console.log(dictionary);
     res.send(JSON.stringify(dictionary));
+});
+
+app.post('/delete', async (req, res) => {
+    const deletedKey = req.query.deletedKey;
+    if (!isValidQueryValue(deletedKey)) {
+        res.sendStatus(400);
+        return;
+    }
+    const dictionary = await GlossariesModel.findOne();
+    await GlossariesModel.updateOne({}, { $unset: { [deletedKey]: 1 } });
+    res.sendStatus(200);
 });
 
 app.get('/author/', (req, res) => {
