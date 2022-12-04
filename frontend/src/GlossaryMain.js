@@ -50,7 +50,7 @@ function GlossaryMain() {
     });
   }
 
-  return (
+  retrn (
     <div className='GM_page'>
       <div className='h3 text-center'>Glossary</div>
       <form onSubmit={onSubmit} className='ms-4 w-75 mt-4 mb-5'>
